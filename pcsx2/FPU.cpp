@@ -182,19 +182,65 @@ float fpuDouble(u32 f)
 	}
 }
 
+static __fi float fpuAccurateAddSub(u32 a, u32 b, bool issub)
+{
+	if (CHECK_VUADDSUBHACK)
+	{
+		int temp = 0;
+		
+		//exponent difference
+		int exp_diff = ((a >> 23) & 0xff) - ((b >> 23) & 0xff);
+		
+		//diff = 25 .. 255 , expt < expd
+		if (exp_diff >= 25)
+		{
+			b = b & 0x80000000;
+		}
+		
+		//diff = 1 .. 24, expt < expd
+		else if (exp_diff > 0)
+		{
+			exp_diff = exp_diff - 1;
+			temp = 0xffffffff << exp_diff;
+			b = temp & b;
+		}
+		
+		//diff = -255 .. -25, expd < expt
+		else if (exp_diff <= -25)
+		{
+			a = a & 0x80000000;
+		}
+	
+		//diff = -24 .. -1 , expd < expt
+		else if (exp_diff < 0)
+		{
+			exp_diff = -exp_diff;
+			exp_diff = exp_diff - 1;
+			temp = 0xffffffff << exp_diff;
+			a = a & temp;
+		}
+	}
+	
+	if (issub)
+		return fpuDouble(a) - fpuDouble(b);
+	else
+		return fpuDouble(a) + fpuDouble(b);
+
+}
+
 void ABS_S() {
 	_FdValUl_ = _FsValUl_ & 0x7fffffff;
 	clearFPUFlags( FPUflagO | FPUflagU );
 }
 
 void ADD_S() {
-	_FdValf_  = fpuDouble( _FsValUl_ ) + fpuDouble( _FtValUl_ );
+	_FdValf_  = fpuAccurateAddSub( _FsValUl_ ,  _FtValUl_ , 0);
 	if (checkOverflow( _FdValUl_, FPUflagO | FPUflagSO)) return;
 	checkUnderflow( _FdValUl_, FPUflagU | FPUflagSU);
 }
 
 void ADDA_S() {
-	_FAValf_  = fpuDouble( _FsValUl_ ) + fpuDouble( _FtValUl_ );
+	_FAValf_  = fpuAccurateAddSub( _FsValUl_ ,  _FtValUl_ , 0);
 	if (checkOverflow( _FAValUl_, FPUflagO | FPUflagSO)) return;
 	checkUnderflow( _FAValUl_, FPUflagU | FPUflagSU);
 }
@@ -272,13 +318,15 @@ void DIV_S() {
 void MADD_S() {
 	FPRreg temp;
 	temp.f = fpuDouble( _FsValUl_ ) * fpuDouble( _FtValUl_ );
-	_FdValf_  = fpuDouble( _FAValUl_ ) + fpuDouble( temp.UL );
+	_FdValf_  = fpuAccurateAddSub( _FAValUl_ , temp.UL , 0);
 	if (checkOverflow( _FdValUl_, FPUflagO | FPUflagSO)) return;
 	checkUnderflow( _FdValUl_, FPUflagU | FPUflagSU);
 }
 
 void MADDA_S() {
-	_FAValf_ += fpuDouble( _FsValUl_ ) * fpuDouble( _FtValUl_ );
+	FPRreg temp;
+	temp.f = fpuDouble( _FsValUl_ ) * fpuDouble( _FtValUl_ );
+	_FAValf_ = fpuAccurateAddSub( _FAValUl_ , temp.UL , 0);
 	if (checkOverflow( _FAValUl_, FPUflagO | FPUflagSO)) return;
 	checkUnderflow( _FAValUl_, FPUflagU | FPUflagSU);
 }
@@ -305,13 +353,15 @@ void MOV_S() {
 void MSUB_S() {
 	FPRreg temp;
 	temp.f = fpuDouble( _FsValUl_ ) * fpuDouble( _FtValUl_ );
-	_FdValf_  = fpuDouble( _FAValUl_ ) - fpuDouble( temp.UL );
+	_FdValf_  = fpuAccurateAddSub( _FAValUl_ , temp.UL , 1);
 	if (checkOverflow( _FdValUl_, FPUflagO | FPUflagSO)) return;
 	checkUnderflow( _FdValUl_, FPUflagU | FPUflagSU);
 }
 
 void MSUBA_S() {
-	_FAValf_ -= fpuDouble( _FsValUl_ ) * fpuDouble( _FtValUl_ );
+	FPRreg temp;
+	temp.f = fpuDouble( _FsValUl_ ) * fpuDouble( _FtValUl_ );
+	_FAValf_ = fpuAccurateAddSub( _FAValUl_ , temp.UL , 1);
 	if (checkOverflow( _FAValUl_, FPUflagO | FPUflagSO)) return;
 	checkUnderflow( _FAValUl_, FPUflagU | FPUflagSU);
 }
@@ -370,13 +420,13 @@ void SQRT_S() {
 }
 
 void SUB_S() {
-	_FdValf_  = fpuDouble( _FsValUl_ ) - fpuDouble( _FtValUl_ );
+	_FdValf_  = fpuAccurateAddSub( _FsValUl_ , _FtValUl_ , 1);
 	if (checkOverflow( _FdValUl_, FPUflagO | FPUflagSO)) return;
 	checkUnderflow( _FdValUl_, FPUflagU | FPUflagSU);
 }
 
 void SUBA_S() {
-	_FAValf_  = fpuDouble( _FsValUl_ ) - fpuDouble( _FtValUl_ );
+	_FAValf_  = fpuAccurateAddSub( _FsValUl_ , _FtValUl_ , 1);
 	if (checkOverflow( _FAValUl_, FPUflagO | FPUflagSO)) return;
 	checkUnderflow( _FAValUl_, FPUflagU | FPUflagSU);
 }
