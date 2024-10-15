@@ -1060,362 +1060,416 @@ static __fi void _vuMULAw(VURegs*  VU) {
 
 static __fi void _vuMADD(VURegs* VU)
 {
+	VECTOR* tmp;
 	VECTOR* dst;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
-	if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + ( vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.x))); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + ( vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.y))); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + ( vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.z))); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + ( vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.w))); else VU_MACw_CLEAR(VU);
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.x); dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.y); dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.z); dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.w); dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
 
 static __fi void _vuMADDi(VURegs* VU)
 {
+	VECTOR* tmp;
 	VECTOR* dst;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
-    if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + (vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VI[REG_I].UL))); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + (vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VI[REG_I].UL))); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + (vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VI[REG_I].UL))); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + (vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VI[REG_I].UL))); else VU_MACw_CLEAR(VU);
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VI[REG_I].UL); dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VI[REG_I].UL); dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VI[REG_I].UL); dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VI[REG_I].UL); dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
 static __fi void _vuMADDq(VURegs* VU)
 {
+	VECTOR* tmp;
 	VECTOR* dst;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
-	if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + (vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VI[REG_Q].UL))); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + (vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VI[REG_Q].UL))); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + (vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VI[REG_Q].UL))); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + (vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VI[REG_Q].UL))); else VU_MACw_CLEAR(VU);
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VI[REG_Q].UL); dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VI[REG_Q].UL); dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VI[REG_Q].UL); dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VI[REG_Q].UL); dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
 static __fi void _vuMADDx(VURegs* VU)
 {
 	float ftx;
+	VECTOR* tmp;
 	VECTOR* dst;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
+	tmp = &VU->TMP;
 	ftx=vuDouble(VU->VF[_Ft_].i.x);
-    if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + (vuDouble(VU->VF[_Fs_].i.x) * ftx)); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + (vuDouble(VU->VF[_Fs_].i.y) * ftx)); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + (vuDouble(VU->VF[_Fs_].i.z) * ftx)); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + (vuDouble(VU->VF[_Fs_].i.w) * ftx)); else VU_MACw_CLEAR(VU);
+    if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * ftx; dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+    if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * ftx; dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+    if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * ftx; dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+    if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * ftx; dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
 static __fi void _vuMADDy(VURegs* VU)
 {
 	float fty;
+	VECTOR* tmp;
 	VECTOR* dst;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
+	tmp = &VU->TMP;
 	fty=vuDouble(VU->VF[_Ft_].i.y);
-    if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + (vuDouble(VU->VF[_Fs_].i.x) * fty)); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + (vuDouble(VU->VF[_Fs_].i.y) * fty)); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + (vuDouble(VU->VF[_Fs_].i.z) * fty)); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + (vuDouble(VU->VF[_Fs_].i.w) * fty)); else VU_MACw_CLEAR(VU);
+    if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * fty; dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+    if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * fty; dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+    if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * fty; dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+    if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * fty; dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
 static __fi void _vuMADDz(VURegs* VU)
 {
 	float ftz;
+	VECTOR* tmp;
 	VECTOR* dst;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
+	tmp = &VU->TMP;
 	ftz=vuDouble(VU->VF[_Ft_].i.z);
-    if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + (vuDouble(VU->VF[_Fs_].i.x) * ftz)); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + (vuDouble(VU->VF[_Fs_].i.y) * ftz)); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + (vuDouble(VU->VF[_Fs_].i.z) * ftz)); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + (vuDouble(VU->VF[_Fs_].i.w) * ftz)); else VU_MACw_CLEAR(VU);
-	VU_STAT_UPDATE(VU);
+    if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * ftz; dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+    if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * ftz; dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+    if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * ftz; dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+    if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * ftz; dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
+    VU_STAT_UPDATE(VU);
 }
 
 static __fi void _vuMADDw(VURegs* VU)
 {
 	float ftw;
+	VECTOR* tmp;
 	VECTOR* dst;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
+	tmp = &VU->TMP;
 	ftw=vuDouble(VU->VF[_Ft_].i.w);
-    if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + (vuDouble(VU->VF[_Fs_].i.x) * ftw)); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + (vuDouble(VU->VF[_Fs_].i.y) * ftw)); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + (vuDouble(VU->VF[_Fs_].i.z) * ftw)); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + (vuDouble(VU->VF[_Fs_].i.w) * ftw)); else VU_MACw_CLEAR(VU);
+    if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * ftw; dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+    if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * ftw; dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+    if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * ftw; dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+    if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * ftw; dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
-static __fi void _vuMADDA(VURegs*  VU) {
-    if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + (vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.x))); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + (vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.y))); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + (vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.z))); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + (vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.w))); else VU_MACw_CLEAR(VU);
+static __fi void _vuMADDA(VURegs*  VU)
+{
+	VECTOR* tmp;
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.x); VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.y); VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.z); VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.w); VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
 static __fi void _vuMADDAi(VURegs* VU)
 {
+	VECTOR* tmp;
+	tmp = &VU->TMP;
 	float ti = vuDouble(VU->VI[REG_I].UL);
-
-    if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + ( vuDouble(VU->VF[_Fs_].i.x) * ti)); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + ( vuDouble(VU->VF[_Fs_].i.y) * ti)); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + ( vuDouble(VU->VF[_Fs_].i.z) * ti)); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + ( vuDouble(VU->VF[_Fs_].i.w) * ti)); else VU_MACw_CLEAR(VU);
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * ti; VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * ti; VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * ti; VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * ti; VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
 static __fi void _vuMADDAq(VURegs* VU)
 {
+	VECTOR* tmp;
+	tmp = &VU->TMP;
 	float tq = vuDouble(VU->VI[REG_Q].UL);
-
-    if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + ( vuDouble(VU->VF[_Fs_].i.x) * tq)); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + ( vuDouble(VU->VF[_Fs_].i.y) * tq)); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + ( vuDouble(VU->VF[_Fs_].i.z) * tq)); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + ( vuDouble(VU->VF[_Fs_].i.w) * tq)); else VU_MACw_CLEAR(VU);
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * tq; VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * tq; VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * tq; VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * tq; VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
-static __fi void _vuMADDAx(VURegs*  VU) {
-    if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + ( vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.x))); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + ( vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.x))); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + ( vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.x))); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + ( vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.x))); else VU_MACw_CLEAR(VU);
+static __fi void _vuMADDAx(VURegs*  VU)
+{
+	VECTOR* tmp;
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.x); VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.x); VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.x); VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.x); VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
-static __fi void _vuMADDAy(VURegs*  VU) {
-	if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + ( vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.y))); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + ( vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.y))); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + ( vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.y))); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + ( vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.y))); else VU_MACw_CLEAR(VU);
+static __fi void _vuMADDAy(VURegs*  VU)
+{
+	VECTOR* tmp;
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.y); VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.y); VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.y); VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.y); VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
-static __fi void _vuMADDAz(VURegs*  VU) {
-    if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + ( vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.z))); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + ( vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.z))); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + ( vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.z))); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + ( vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.z))); else VU_MACw_CLEAR(VU);
+static __fi void _vuMADDAz(VURegs*  VU)
+{
+	VECTOR* tmp;
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.z); VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.z); VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.z); VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.z); VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
-static __fi void _vuMADDAw(VURegs*  VU) {
-    if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) + ( vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.w))); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) + ( vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.w))); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) + ( vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.w))); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) + ( vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.w))); else VU_MACw_CLEAR(VU);
+static __fi void _vuMADDAw(VURegs*  VU)
+{
+	VECTOR* tmp;
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.w); VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 0));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.w); VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 0));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.w); VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 0));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.w); VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 0));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
 static __fi void _vuMSUB(VURegs* VU)
 {
+	VECTOR* tmp;
 	VECTOR* dst;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
-    if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) - ( vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.x))); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) - ( vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.y))); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) - ( vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.z))); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) - ( vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.w))); else VU_MACw_CLEAR(VU);
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.x); dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.y); dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.z); dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.w); dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
+
 static __fi void _vuMSUBi(VURegs* VU)
 {
-	float ti = vuDouble(VU->VI[REG_I].UL);
+	VECTOR* tmp;
 	VECTOR* dst;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
-    if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) - ( vuDouble(VU->VF[_Fs_].i.x) * ti  ) ); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) - ( vuDouble(VU->VF[_Fs_].i.y) * ti  ) ); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) - ( vuDouble(VU->VF[_Fs_].i.z) * ti  ) ); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) - ( vuDouble(VU->VF[_Fs_].i.w) * ti  ) ); else VU_MACw_CLEAR(VU);
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VI[REG_I].UL); dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VI[REG_I].UL); dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VI[REG_I].UL); dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VI[REG_I].UL); dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
 static __fi void _vuMSUBq(VURegs* VU)
 {
-	float tq = vuDouble(VU->VI[REG_Q].UL);
+	VECTOR* tmp;
 	VECTOR* dst;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
-    if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x)  - ( vuDouble(VU->VF[_Fs_].i.x) * tq  ) ); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y)  - ( vuDouble(VU->VF[_Fs_].i.y) * tq  ) ); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z)  - ( vuDouble(VU->VF[_Fs_].i.z) * tq  ) ); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w)  - ( vuDouble(VU->VF[_Fs_].i.w) * tq  ) ); else VU_MACw_CLEAR(VU);
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VI[REG_Q].UL); dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VI[REG_Q].UL); dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VI[REG_Q].UL); dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VI[REG_Q].UL); dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
-
 
 static __fi void _vuMSUBx(VURegs* VU)
 {
 	float ftx;
+	VECTOR* tmp;
 	VECTOR* dst;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
+	tmp = &VU->TMP;
 	ftx=vuDouble(VU->VF[_Ft_].i.x);
-    if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x)  - ( vuDouble(VU->VF[_Fs_].i.x) * ftx  ) ); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y)  - ( vuDouble(VU->VF[_Fs_].i.y) * ftx  ) ); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z)  - ( vuDouble(VU->VF[_Fs_].i.z) * ftx  ) ); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w)  - ( vuDouble(VU->VF[_Fs_].i.w) * ftx  ) ); else VU_MACw_CLEAR(VU);
+    if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * ftx; dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+    if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * ftx; dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+    if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * ftx; dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+    if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * ftx; dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
-
 
 static __fi void _vuMSUBy(VURegs* VU)
 {
 	float fty;
+	VECTOR* tmp;
 	VECTOR* dst;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
+	tmp = &VU->TMP;
 	fty=vuDouble(VU->VF[_Ft_].i.y);
-    if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x)  - ( vuDouble(VU->VF[_Fs_].i.x) * fty  ) ); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y)  - ( vuDouble(VU->VF[_Fs_].i.y) * fty  ) ); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z)  - ( vuDouble(VU->VF[_Fs_].i.z) * fty  ) ); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w)  - ( vuDouble(VU->VF[_Fs_].i.w) * fty  ) ); else VU_MACw_CLEAR(VU);
+    if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * fty; dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+    if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * fty; dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+    if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * fty; dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+    if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * fty; dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
-
 
 static __fi void _vuMSUBz(VURegs* VU)
 {
 	float ftz;
+	VECTOR* tmp;
 	VECTOR* dst;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
+	tmp = &VU->TMP;
 	ftz=vuDouble(VU->VF[_Ft_].i.z);
-    if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x)  - ( vuDouble(VU->VF[_Fs_].i.x) * ftz  ) ); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y)  - ( vuDouble(VU->VF[_Fs_].i.y) * ftz  ) ); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z)  - ( vuDouble(VU->VF[_Fs_].i.z) * ftz  ) ); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w)  - ( vuDouble(VU->VF[_Fs_].i.w) * ftz  ) ); else VU_MACw_CLEAR(VU);
+    if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * ftz; dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+    if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * ftz; dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+    if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * ftz; dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+    if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * ftz; dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
 static __fi void _vuMSUBw(VURegs* VU)
 {
 	float ftw;
-	VECTOR * dst;
-    if (_Fd_ == 0) dst = &RDzero;
-	else dst = &VU->VF[_Fd_];
+	VECTOR* tmp;
+	VECTOR* dst;
+	if (_Fd_ == 0)
+		dst = &RDzero;
+	else
+		dst = &VU->VF[_Fd_];
 
+	tmp = &VU->TMP;
 	ftw=vuDouble(VU->VF[_Ft_].i.w);
-    if (_X) dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x)  - ( vuDouble(VU->VF[_Fs_].i.x) * ftw  ) ); else VU_MACx_CLEAR(VU);
-    if (_Y) dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y)  - ( vuDouble(VU->VF[_Fs_].i.y) * ftw  ) ); else VU_MACy_CLEAR(VU);
-    if (_Z) dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z)  - ( vuDouble(VU->VF[_Fs_].i.z) * ftw  ) ); else VU_MACz_CLEAR(VU);
-    if (_W) dst->i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w)  - ( vuDouble(VU->VF[_Fs_].i.w) * ftw  ) ); else VU_MACw_CLEAR(VU);
+    if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * ftw; dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+    if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * ftw; dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+    if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * ftw; dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+    if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * ftw; dst->i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
-
-static __fi void _vuMSUBA(VURegs*  VU) {
-    if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) - ( vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.x))); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) - ( vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.y))); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) - ( vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.z))); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) - ( vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.w))); else VU_MACw_CLEAR(VU);
-    VU_STAT_UPDATE(VU);
-}
-
-static __fi void _vuMSUBAi(VURegs*  VU) {
-    if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) - ( vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VI[REG_I].UL))); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) - ( vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VI[REG_I].UL))); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) - ( vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VI[REG_I].UL))); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) - ( vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VI[REG_I].UL))); else VU_MACw_CLEAR(VU);
-    VU_STAT_UPDATE(VU);
-}
-
-static __fi void _vuMSUBAq(VURegs*  VU) {
-    if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) - ( vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VI[REG_Q].UL))); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) - ( vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VI[REG_Q].UL))); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) - ( vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VI[REG_Q].UL))); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) - ( vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VI[REG_Q].UL))); else VU_MACw_CLEAR(VU);
-    VU_STAT_UPDATE(VU);
-}
-
-static __fi void _vuMSUBAx(VURegs* VU)
+static __fi void _vuMSUBA(VURegs*  VU)
 {
-	float tx = vuDouble(VU->VF[_Ft_].i.x);
-
-    if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) - ( vuDouble(VU->VF[_Fs_].i.x) * tx)); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) - ( vuDouble(VU->VF[_Fs_].i.y) * tx)); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) - ( vuDouble(VU->VF[_Fs_].i.z) * tx)); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) - ( vuDouble(VU->VF[_Fs_].i.w) * tx)); else VU_MACw_CLEAR(VU);
+	VECTOR* tmp;
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.x); VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.y); VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.z); VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.w); VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
-static __fi void _vuMSUBAy(VURegs* VU)
+static __fi void _vuMSUBAi(VURegs* VU)
 {
-	float ty = vuDouble(VU->VF[_Ft_].i.y);
-
-    if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) - ( vuDouble(VU->VF[_Fs_].i.x) * ty)); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) - ( vuDouble(VU->VF[_Fs_].i.y) * ty)); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) - ( vuDouble(VU->VF[_Fs_].i.z) * ty)); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) - ( vuDouble(VU->VF[_Fs_].i.w) * ty)); else VU_MACw_CLEAR(VU);
+	VECTOR* tmp;
+	tmp = &VU->TMP;
+	float ti = vuDouble(VU->VI[REG_I].UL);
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * ti; VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * ti; VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * ti; VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * ti; VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
-static __fi void _vuMSUBAz(VURegs* VU)
+static __fi void _vuMSUBAq(VURegs* VU)
 {
-	float tz = vuDouble(VU->VF[_Ft_].i.z);
-
-    if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) - ( vuDouble(VU->VF[_Fs_].i.x) * tz)); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) - ( vuDouble(VU->VF[_Fs_].i.y) * tz)); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) - ( vuDouble(VU->VF[_Fs_].i.z) * tz)); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) - ( vuDouble(VU->VF[_Fs_].i.w) * tz)); else VU_MACw_CLEAR(VU);
+	VECTOR* tmp;
+	tmp = &VU->TMP;
+	float tq = vuDouble(VU->VI[REG_Q].UL);
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * tq; VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * tq; VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * tq; VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * tq; VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
-static __fi void _vuMSUBAw(VURegs* VU)
-{
-	float tw = vuDouble(VU->VF[_Ft_].i.w);
 
-    if (_X) VU->ACC.i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) - ( vuDouble(VU->VF[_Fs_].i.x) * tw)); else VU_MACx_CLEAR(VU);
-    if (_Y) VU->ACC.i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) - ( vuDouble(VU->VF[_Fs_].i.y) * tw)); else VU_MACy_CLEAR(VU);
-    if (_Z) VU->ACC.i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) - ( vuDouble(VU->VF[_Fs_].i.z) * tw)); else VU_MACz_CLEAR(VU);
-    if (_W) VU->ACC.i.w = VU_MACw_UPDATE(VU, vuDouble(VU->ACC.i.w) - ( vuDouble(VU->VF[_Fs_].i.w) * tw)); else VU_MACw_CLEAR(VU);
+static __fi void _vuMSUBAx(VURegs*  VU)
+{
+	VECTOR* tmp;
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.x); VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.x); VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.x); VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.x); VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
+    VU_STAT_UPDATE(VU);
+}
+
+static __fi void _vuMSUBAy(VURegs*  VU)
+{
+	VECTOR* tmp;
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.y); VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.y); VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.y); VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.y); VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
+    VU_STAT_UPDATE(VU);
+}
+
+static __fi void _vuMSUBAz(VURegs*  VU)
+{
+	VECTOR* tmp;
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.z); VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.z); VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.z); VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.z); VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
+    VU_STAT_UPDATE(VU);
+}
+
+static __fi void _vuMSUBAw(VURegs*  VU)
+{
+	VECTOR* tmp;
+	tmp = &VU->TMP;
+	if (_X) {tmp->f.x = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.w); VU->ACC.i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));} else VU_MACx_CLEAR(VU);
+	if (_Y) {tmp->f.y = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.w); VU->ACC.i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));} else VU_MACy_CLEAR(VU);
+	if (_Z) {tmp->f.z = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.w); VU->ACC.i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));} else VU_MACz_CLEAR(VU);
+	if (_W) {tmp->f.w = vuDouble(VU->VF[_Fs_].i.w) * vuDouble(VU->VF[_Ft_].i.w); VU->ACC.i.w = VU_MACw_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.w, tmp->i.w, 1));} else VU_MACw_CLEAR(VU);
     VU_STAT_UPDATE(VU);
 }
 
