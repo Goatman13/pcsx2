@@ -1638,24 +1638,20 @@ static __fi void _vuOPMULA(VURegs* VU)
 
 static __fi void _vuOPMSUB(VURegs* VU)
 {
+	VECTOR* tmp;
 	VECTOR* dst;
-	float ftx, fty, ftz;
-	float fsx, fsy, fsz;
 	if (_Fd_ == 0)
 		dst = &RDzero;
 	else
 		dst = &VU->VF[_Fd_];
 
-	ftx = vuDouble(VU->VF[_Ft_].i.x);
-	fty = vuDouble(VU->VF[_Ft_].i.y);
-	ftz = vuDouble(VU->VF[_Ft_].i.z);
-	fsx = vuDouble(VU->VF[_Fs_].i.x);
-	fsy = vuDouble(VU->VF[_Fs_].i.y);
-	fsz = vuDouble(VU->VF[_Fs_].i.z);
-
-	dst->i.x = VU_MACx_UPDATE(VU, vuDouble(VU->ACC.i.x) - fsy * ftz);
-	dst->i.y = VU_MACy_UPDATE(VU, vuDouble(VU->ACC.i.y) - fsz * ftx);
-	dst->i.z = VU_MACz_UPDATE(VU, vuDouble(VU->ACC.i.z) - fsx * fty);
+	tmp = &VU->TMP;
+	tmp->f.x = vuDouble(VU->VF[_Fs_].i.y) * vuDouble(VU->VF[_Ft_].i.z);
+	tmp->f.y = vuDouble(VU->VF[_Fs_].i.z) * vuDouble(VU->VF[_Ft_].i.x);
+	tmp->f.z = vuDouble(VU->VF[_Fs_].i.x) * vuDouble(VU->VF[_Ft_].i.y);
+	dst->i.x = VU_MACx_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.x, tmp->i.x, 1));
+	dst->i.y = VU_MACy_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.y, tmp->i.y, 1));
+	dst->i.z = VU_MACz_UPDATE(VU, vuAccurateAddSub(VU->ACC.i.z, tmp->i.z, 1));
 	VU_STAT_UPDATE(VU);
 }
 
